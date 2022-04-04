@@ -12,7 +12,7 @@ import { range } from "./util.js";
 
 // TODO(@darzu): create this somewhere as a proper resource
 // create web audio api context
-const audioCtx = new AudioContext();
+const audioCtx = AudioContext ? new AudioContext() : null;
 
 // create Oscillator node
 let oscillator: OscillatorNode | null;
@@ -20,6 +20,8 @@ let oscillator: OscillatorNode | null;
 const MAX_VOLUME = 0.02;
 
 function playFreq(freq: number, durSec: number, offset: number) {
+  if (!audioCtx) return;
+
   const startTime = offset;
   const stopTime = offset + durSec;
 
@@ -49,6 +51,7 @@ function playNote(
   durSec: number = 0.25,
   offset: number | null = null
 ) {
+  if (!audioCtx) return;
   if (!offset) offset = audioCtx.currentTime;
 
   const ROOT = 440;
@@ -215,7 +218,7 @@ function playChords(
 ) {
   // console.log("click!");
   // canvasRef.removeEventListener('click', doLockMouse)
-
+  if (!audioCtx) return;
   const start = audioCtx.currentTime;
 
   const scale = majorMinor === "major" ? mkMajorScale(0) : mkMinorScale(0);
